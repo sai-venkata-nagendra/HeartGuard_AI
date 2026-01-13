@@ -1,8 +1,10 @@
-❤️ HeartGuard AI: Multi-Model Cardiac Diagnostic Tool
-HeartGuard AI is a professional-grade web application that leverages four distinct Machine Learning architectures to predict the risk of heart disease. By using a Consensus Engine, the app cross-verifies patient data across multiple models to provide a highly reliable assessment.
+# ❤️ HeartGuard AI: Multi-Model Cardiac Diagnostic Tool
 
-🚀 Live Demo: Click Here to View the App
+HeartGuard AI is a professional-grade web application that leverages four distinct Machine Learning architectures to predict the risk of heart disease. By using a **Consensus Engine**, the app cross-verifies patient data across multiple models to provide a highly reliable assessment.
 
+🚀 **Live Demo:** [Click Here to View the App](YOUR_DEPLOYMENT_LINK_HERE)
+
+---
 ✨ Features
 Individual Analysis: Real-time risk assessment for single patients.
 Batch Processing: Upload a CSV file with up to 100+ patient records for instant screening.
