@@ -2,6 +2,8 @@
 
 HeartGuard AI is a professional-grade web application that leverages four distinct Machine Learning architectures to predict the risk of heart disease. By using a **Consensus Engine**, the app cross-verifies patient data across multiple models to provide a highly reliable assessment.
 
+<img width="1908" height="896" alt="image" src="https://github.com/user-attachments/assets/f320f920-67ca-4d78-9104-727a0958390b" />
+
 🚀 **Live Demo:** [Click Here to View the App](YOUR_DEPLOYMENT_LINK_HERE)
 
 ---
@@ -18,35 +20,11 @@ Data Handling: Pandas, NumPy
 Machine Learning: Scikit-Learn
 Model Storage: Pickle
 
-📂 Project Structure
-Heart-Disease-Prediction/
-├── app.py                # Main Streamlit application
-├── DecisionTree.pkl      # Trained Decision Tree Model
-├── LogisticRegression.pkl # Trained Logistic Regression Model
-├── GridRandomForest.pkl  # Trained Random Forest Model
-├── SVM.pkl               # Trained SVM Model
-├── requirements.txt      # List of dependencies
-└── README.md             # Project documentation
+<img width="473" height="206" alt="image" src="https://github.com/user-attachments/assets/1ad89082-23de-4ace-891a-9fae86e19dd4" />
 
 🚀 Local Installation
 Clone the repository:
 
-Bash
-
-git clone [https://github.com/yourusername/heartguard-ai.git](https://github.com/yourusername/heartguard-ai.git)
-cd heartguard-ai
-
-Install dependencies:
-
-Bash
-
-pip install -r requirements.txt
-
-Run the application:
-
-Bash
-
-streamlit run app.py
 
 📊 How It Works
 The system follows a 3-step pipeline:
