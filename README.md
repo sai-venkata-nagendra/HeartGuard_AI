@@ -4,7 +4,7 @@ HeartGuard AI is a professional-grade web application that leverages four distin
 
 <img width="1908" height="896" alt="image" src="https://github.com/user-attachments/assets/f320f920-67ca-4d78-9104-727a0958390b" />
 
-🚀 **Live Demo:** [Click Here to View the App](YOUR_DEPLOYMENT_LINK_HERE)
+🚀 **Live Demo:** [Click Here to View the App]((https://heartguardai-2004.streamlit.app/))
 
 ---
 ✨ Features
