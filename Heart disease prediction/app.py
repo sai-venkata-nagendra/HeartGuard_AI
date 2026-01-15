@@ -90,10 +90,20 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # --- MODEL LOADING ---
+# --- MODEL LOADING ---
 @st.cache_resource
 def load_models():
     algonames = ['Decision Tree', 'Logistic Regression', 'Random Forest', 'Support Vector Machine']
-    model_files = ['DecisionTree.pkl', 'LogisticRegression.pkl', 'GridRandomForest.pkl', 'SVM.pkl']
+    
+    # ADD THE FOLDER NAME TO THE PATHS
+    folder = "Heart disease prediction"
+    model_files = [
+        f"{folder}/DecisionTree.pkl", 
+        f"{folder}/LogisticRegression.pkl", 
+        f"{folder}/GridRandomForest.pkl", 
+        f"{folder}/SVM.pkl"
+    ]
+    
     loaded_models = {}
     
     for name, file in zip(algonames, model_files):
@@ -101,11 +111,13 @@ def load_models():
             try:
                 with open(file, 'rb') as f:
                     loaded_models[name] = pickle.load(f)
-            except Exception:
-                pass 
+            except Exception as e:
+                st.error(f"Error loading {name}: {e}") 
+        else:
+            # This will help you debug if it still fails
+            st.warning(f"File not found: {file}")
+            
     return loaded_models
-
-models_dict = load_models()
 
 # --- SIDEBAR ---
 with st.sidebar:
@@ -229,4 +241,5 @@ with tab3:
         
     
     st.divider()
+
     st.markdown("<p style='text-align: center;'>Our system uses <b>Consensus Voting</b>: Results are cross-verified by all four models before a final assessment is generated.</p>", unsafe_allow_html=True)
