@@ -89,14 +89,13 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- MODEL LOADING ---
-import os
 from pathlib import Path
 
 # --- MODEL LOADING ---
 @st.cache_resource
 def load_models():
-    # Automatically detects the folder where app.py is located
+    # 1. Get the folder where app.py is actually located
+    # This will point to /mount/src/heartguard_ai/Heart disease prediction/
     current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
     
     algonames = ['Decision Tree', 'Logistic Regression', 'Random Forest', 'Support Vector Machine']
@@ -104,7 +103,7 @@ def load_models():
     loaded_models = {}
     
     for name, file in zip(algonames, model_files):
-        # Join the current directory with the filename
+        # 2. Join the folder path with the filename
         model_path = current_dir / file
         
         if model_path.exists():
@@ -114,12 +113,12 @@ def load_models():
             except Exception as e:
                 st.error(f"Error loading {name}: {e}")
         else:
-            # Helpful error to see where the app is looking
+            # This will show you exactly where it is looking if it fails
             st.error(f"Missing file: {model_path}")
             
     return loaded_models
 
-# CRITICAL: Ensure this line is NOT inside a function or an 'if' block
+# Ensure this is called outside the function
 models_dict = load_models()
 
 # --- SIDEBAR ---
@@ -246,4 +245,5 @@ with tab3:
     st.divider()
 
     st.markdown("<p style='text-align: center;'>Our system uses <b>Consensus Voting</b>: Results are cross-verified by all four models before a final assessment is generated.</p>", unsafe_allow_html=True)
+
 
