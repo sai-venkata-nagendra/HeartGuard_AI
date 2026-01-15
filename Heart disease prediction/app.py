@@ -89,36 +89,32 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-from pathlib import Path
-
 # --- MODEL LOADING ---
 @st.cache_resource
 def load_models():
-    # 1. Get the folder where app.py is actually located
-    # This will point to /mount/src/heartguard_ai/Heart disease prediction/
-    current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
-    
+    """
+    Load all ML models from disk.
+    Uses the directory of this file instead of the current working directory
+    so that it also works when Streamlit runs the app from the repo root.
+    """
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+
     algonames = ['Decision Tree', 'Logistic Regression', 'Random Forest', 'Support Vector Machine']
-    model_files = ['DecisionTree.pkl', 'LogisticRegression.pkl', 'GridRandomForest.pkl', 'SVM.pkl']
+    model_filenames = ['DecisionTree.pkl', 'LogisticRegression.pkl', 'GridRandomForest.pkl', 'SVM.pkl']
+
     loaded_models = {}
-    
-    for name, file in zip(algonames, model_files):
-        # 2. Join the folder path with the filename
-        model_path = current_dir / file
-        
-        if model_path.exists():
+
+    for name, filename in zip(algonames, model_filenames):
+        model_path = os.path.join(base_dir, filename)
+        if os.path.exists(model_path):
             try:
                 with open(model_path, 'rb') as f:
                     loaded_models[name] = pickle.load(f)
-            except Exception as e:
-                st.error(f"Error loading {name}: {e}")
-        else:
-            # This will show you exactly where it is looking if it fails
-            st.error(f"Missing file: {model_path}")
-            
+            except Exception:
+                # If a single model fails to load, continue with the others
+                continue
     return loaded_models
 
-# Ensure this is called outside the function
 models_dict = load_models()
 
 # --- SIDEBAR ---
@@ -243,7 +239,4 @@ with tab3:
         
     
     st.divider()
-
     st.markdown("<p style='text-align: center;'>Our system uses <b>Consensus Voting</b>: Results are cross-verified by all four models before a final assessment is generated.</p>", unsafe_allow_html=True)
-
-
