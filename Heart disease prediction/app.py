@@ -90,34 +90,37 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # --- MODEL LOADING ---
+import os
+from pathlib import Path
+
 # --- MODEL LOADING ---
 @st.cache_resource
 def load_models():
+    # Automatically detects the folder where app.py is located
+    current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
+    
     algonames = ['Decision Tree', 'Logistic Regression', 'Random Forest', 'Support Vector Machine']
-    
-    # ADD THE FOLDER NAME TO THE PATHS
-    folder = "Heart disease prediction"
-    model_files = [
-        f"{folder}/DecisionTree.pkl", 
-        f"{folder}/LogisticRegression.pkl", 
-        f"{folder}/GridRandomForest.pkl", 
-        f"{folder}/SVM.pkl"
-    ]
-    
+    model_files = ['DecisionTree.pkl', 'LogisticRegression.pkl', 'GridRandomForest.pkl', 'SVM.pkl']
     loaded_models = {}
     
     for name, file in zip(algonames, model_files):
-        if os.path.exists(file):
+        # Join the current directory with the filename
+        model_path = current_dir / file
+        
+        if model_path.exists():
             try:
-                with open(file, 'rb') as f:
+                with open(model_path, 'rb') as f:
                     loaded_models[name] = pickle.load(f)
             except Exception as e:
-                st.error(f"Error loading {name}: {e}") 
+                st.error(f"Error loading {name}: {e}")
         else:
-            # This will help you debug if it still fails
-            st.warning(f"File not found: {file}")
+            # Helpful error to see where the app is looking
+            st.error(f"Missing file: {model_path}")
             
     return loaded_models
+
+# CRITICAL: Ensure this line is NOT inside a function or an 'if' block
+models_dict = load_models()
 
 # --- SIDEBAR ---
 with st.sidebar:
@@ -243,3 +246,4 @@ with tab3:
     st.divider()
 
     st.markdown("<p style='text-align: center;'>Our system uses <b>Consensus Voting</b>: Results are cross-verified by all four models before a final assessment is generated.</p>", unsafe_allow_html=True)
+
