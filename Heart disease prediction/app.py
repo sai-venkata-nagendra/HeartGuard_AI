@@ -96,6 +96,12 @@ def load_models():
     Load all ML models from disk.
     Uses the directory of this file instead of the current working directory
     so that it also works when Streamlit runs the app from the repo root.
+
+    Returns
+    -------
+    (dict, list[tuple[str, str]]):
+        - dict of successfully loaded models
+        - list of (model_name, error_message) for any failures
     """
     base_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -103,19 +109,23 @@ def load_models():
     model_filenames = ['DecisionTree.pkl', 'LogisticRegression.pkl', 'GridRandomForest.pkl', 'SVM.pkl']
 
     loaded_models = {}
+    load_errors = []
 
     for name, filename in zip(algonames, model_filenames):
         model_path = os.path.join(base_dir, filename)
-        if os.path.exists(model_path):
-            try:
-                with open(model_path, 'rb') as f:
-                    loaded_models[name] = pickle.load(f)
-            except Exception:
-                # If a single model fails to load, continue with the others
-                continue
-    return loaded_models
+        if not os.path.exists(model_path):
+            load_errors.append((name, f"File not found at: {model_path}"))
+            continue
 
-models_dict = load_models()
+        try:
+            with open(model_path, 'rb') as f:
+                loaded_models[name] = pickle.load(f)
+        except Exception as e:
+            load_errors.append((name, f"{type(e).__name__}: {e}"))
+
+    return loaded_models, load_errors
+
+models_dict, model_load_errors = load_models()
 
 # --- SIDEBAR ---
 with st.sidebar:
@@ -180,6 +190,10 @@ with tab1:
     if st.button("EXECUTE HEART ANALYSIS"):
         if not models_dict:
             st.error("Missing system files.")
+            if model_load_errors:
+                with st.expander("View technical details"):
+                    for name, msg in model_load_errors:
+                        st.write(f"**{name}** → {msg}")
         else:
             st.divider()
             res_cols = st.columns(len(models_dict))
@@ -240,3 +254,16 @@ with tab3:
     
     st.divider()
     st.markdown("<p style='text-align: center;'>Our system uses <b>Consensus Voting</b>: Results are cross-verified by all four models before a final assessment is generated.</p>", unsafe_allow_html=True)
+
+    # Diagnostics for model loading (to help when deploying)
+    st.markdown("#### 🔍 Model Loading Diagnostics")
+    if models_dict:
+        st.success(f"{len(models_dict)} models loaded successfully.")
+    else:
+        st.error("No models loaded. See details below.")
+
+    if model_load_errors:
+        for name, msg in model_load_errors:
+            st.write(f"- **{name}**: {msg}")
+    else:
+        st.caption("No model loading errors reported.")
